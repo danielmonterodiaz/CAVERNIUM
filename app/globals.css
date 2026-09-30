@@ -1,0 +1,39 @@
+@import "tailwindcss";
+
+:root {
+  --background: #05070b;
+  --foreground: #f5f7ff;
+
+  --cavernium-surface: #0b1018;
+  --cavernium-surface-light: #111722;
+  --cavernium-border: #252c3a;
+
+  --cavernium-violet: #9b6cff;
+  --cavernium-violet-light: #b58cff;
+
+  --cavernium-cyan: #35d9ff;
+
+  --cavernium-muted: #8b91a3;
+  --cavernium-muted-dark: #5f6678;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), sans-serif;
+}
+
+h2 {
+  font-family: var(--font-plus-jakarta), sans-serif;
+}
+h1 {
+  font-family: var(--font-geist-sans), sans-serif;
+}
