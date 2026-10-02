@@ -5,6 +5,12 @@ import { createPortal } from "react-dom";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase";
 
+declare global {
+  interface Window {
+    gtag?: (...args: unknown[]) => void;
+  }
+}
+
 let activeAudio: HTMLAudioElement | null = null;
 
 type TrackPlayerProps = {
@@ -51,6 +57,7 @@ export default function TrackPlayer({
   const sessionStartedAtRef = useRef<string | null>(null);
   const listenCreatedRef = useRef(false);
   const lastListenUpdateRef = useRef(0);
+  const playAnalyticsSentRef = useRef(false);
 
   const [currentTime, setCurrentTime] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -261,6 +268,7 @@ export default function TrackPlayer({
     sessionStartedAtRef.current = null;
     listenCreatedRef.current = false;
     lastListenUpdateRef.current = 0;
+    playAnalyticsSentRef.current = false;
 
     setCurrentTime(0);
     setIsPlaying(false);
@@ -381,7 +389,6 @@ export default function TrackPlayer({
     listenCreatedRef.current = true;
   }
 
-
   /*
    * Eventos del reproductor.
    *
@@ -441,6 +448,25 @@ export default function TrackPlayer({
 
     function handlePlay() {
       setIsPlaying(true);
+
+      if (
+        !playAnalyticsSentRef.current &&
+        typeof window !== "undefined" &&
+        typeof window.gtag === "function"
+      ) {
+        playAnalyticsSentRef.current = true;
+
+        window.gtag(
+          "event",
+          "track_play",
+          {
+            track_id: trackId,
+            track_title: title,
+            artist_name: artist,
+            genre,
+          }
+        );
+      }
     }
 
     function handlePause() {
@@ -482,14 +508,17 @@ export default function TrackPlayer({
       "timeupdate",
       handleTimeUpdate
     );
+
     audio.addEventListener(
       "play",
       handlePlay
     );
+
     audio.addEventListener(
       "pause",
       handlePause
     );
+
     audio.addEventListener(
       "ended",
       handleEnded
@@ -500,20 +529,23 @@ export default function TrackPlayer({
         "timeupdate",
         handleTimeUpdate
       );
+
       audio.removeEventListener(
         "play",
         handlePlay
       );
+
       audio.removeEventListener(
         "pause",
         handlePause
       );
+
       audio.removeEventListener(
         "ended",
         handleEnded
       );
     };
-  }, [trackId, durationSeconds]);
+  }, [trackId, durationSeconds, title, artist, genre]);
 
   async function togglePlay() {
     const audio = audioRef.current;
@@ -756,15 +788,15 @@ export default function TrackPlayer({
 
   return (
     <div
-     className={`relative flex min-h-0 items-start overflow-hidden rounded-2xl border border-white/10 ${
-  compact
-    ? "bg-black/10"
-    : "bg-black"
-} md:items-start ${
-  compact
-    ? ""
-    : "md:min-h-[440px]"
-}`}
+      className={`relative flex min-h-0 items-start overflow-hidden rounded-2xl border border-white/10 ${
+        compact
+          ? "bg-black/10"
+          : "bg-black"
+      } md:items-start ${
+        compact
+          ? ""
+          : "md:min-h-[440px]"
+      }`}
     >
       {!hideCover && (
         <div
@@ -850,11 +882,11 @@ export default function TrackPlayer({
         </div>
       )}
 
-     <div
-  className={`min-w-0 flex-1 ${
-    compact ? "p-3" : "p-3 md:p-5"
-  }`}
->
+      <div
+        className={`min-w-0 flex-1 ${
+          compact ? "p-3" : "p-3 md:p-5"
+        }`}
+      >
         <h1
           className={`mt-1 flex flex-wrap items-baseline gap-x-3 gap-y-1 font-sans font-medium leading-tight ${
             compact
@@ -1039,12 +1071,12 @@ export default function TrackPlayer({
               !isAuthenticated && (
                 <div
                   className={`${
-  compact
-    ? hideCover
-      ? "absolute right-3 top-1/2 z-10 w-32 -translate-y-1/2"
-      : "absolute left-0 top-[140px] z-10 w-32"
-    : "mt-4"
-} rounded-lg border border-white/10 bg-white/5 px-3 py-2.5 text-xs text-white/50`}
+                    compact
+                      ? hideCover
+                        ? "absolute right-3 top-1/2 z-10 w-32 -translate-y-1/2"
+                        : "absolute left-0 top-[140px] z-10 w-32"
+                      : "mt-4"
+                  } rounded-lg border border-white/10 bg-white/5 px-3 py-2.5 text-xs text-white/50`}
                 >
                   <span className="text-white/70">
                     Want to rate this track?
