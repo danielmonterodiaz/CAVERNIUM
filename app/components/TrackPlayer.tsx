@@ -226,7 +226,14 @@ export default function TrackPlayer({
         return;
       }
 
-      setIsSaved(true);
+            setIsSaved(true);
+
+      window.gtag?.("event", "track_save", {
+        track_id: trackId,
+        track_title: title,
+        artist_name: artist,
+        genre,
+      });
     }
 
     setSavingSave(false);
