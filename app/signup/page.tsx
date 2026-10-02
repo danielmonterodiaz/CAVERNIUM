@@ -87,6 +87,11 @@ export default function SignUp() {
       return;
     }
 
+    window.gtag?.("event", "sign_up", {
+      method: "email",
+      artist_name: cleanArtistName,
+    });
+
     setMessage(
       "Account created. Check your email to confirm your account."
     );
