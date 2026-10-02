@@ -6,6 +6,13 @@ const supabase = createClient();
 import Link from "next/link";
 import MobileNav from "@/app/components/MobileNav";
 
+declare global {
+  interface Window {
+    gtag?: (...args: unknown[]) => void;
+  }
+}
+
+
 const caverniumButtonClass =
   "inline-flex cursor-pointer items-center justify-center rounded-lg border border-[#0286DC]/60 bg-black/40 px-4 py-2 font-sans text-xs font-medium uppercase tracking-wider text-[#5CCBFF] transition hover:border-[#5CCBFF] hover:bg-[#0286DC]/15 hover:text-white hover:drop-shadow-[0_0_6px_rgba(2,134,220,0.55)] disabled:cursor-not-allowed disabled:opacity-40";
 
@@ -249,33 +256,10 @@ export default function UploadTrack() {
 
       const coverPath = `artists/${user.id}/${crypto.randomUUID()}-${coverFile.name}`;
 
-      let coverError: {
-        message: string;
-        statusCode?: string | number;
-      } | null = null;
-
-      for (let attempt = 1; attempt <= 3; attempt++) {
-        const { error } = await supabase.storage
+      const { error: coverError } =
+        await supabase.storage
           .from("covers")
           .upload(coverPath, coverFile);
-
-        coverError = error;
-
-        if (!error) {
-          break;
-        }
-
-        const statusCode = Number(error.statusCode);
-
-        if (attempt < 3 && statusCode >= 500) {
-          await new Promise((resolve) =>
-            setTimeout(resolve, attempt * 700)
-          );
-          continue;
-        }
-
-        break;
-      }
 
       if (coverError) {
         await cleanupUploadedFiles();
@@ -348,6 +332,12 @@ export default function UploadTrack() {
       setLoading(false);
       return;
     }
+
+    window.gtag?.("event", "track_submission", {
+      track_title: title,
+      artist_name: artist.artist_name,
+      genre: finalGenre || "Unknown genre",
+    });
 
     setUploadProgress(100);
     setLoading(false);
@@ -564,7 +554,6 @@ export default function UploadTrack() {
 
               <option value="Pop">Pop</option>
               <option value="Rock">Rock</option>
-              <option value="Ballad">Ballad</option>
               <option value="Alternative">
                 Alternative
               </option>
