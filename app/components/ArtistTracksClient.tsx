@@ -61,15 +61,14 @@ export default function ArtistTracksClient({
 
   const playerRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (
-      typeof window !== "undefined" &&
-      typeof window.gtag === "function"
-    ) {
-      window.gtag("event", "artist_view", {
+   useEffect(() => {
+    const timeout = window.setTimeout(() => {
+      window.gtag?.("event", "artist_view", {
         artist_name: artistName,
       });
-    }
+    }, 1000);
+
+    return () => window.clearTimeout(timeout);
   }, [artistName]);
 
   useEffect(() => {
