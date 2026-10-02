@@ -5,6 +5,12 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase";
 import TrackPlayer from "@/app/components/TrackPlayer";
 
+declare global {
+  interface Window {
+    gtag?: (...args: unknown[]) => void;
+  }
+}
+
 type ArtistTrack = {
   id: string;
   title: string;
@@ -54,6 +60,17 @@ export default function ArtistTracksClient({
     useState<ArtistTrack | null>(null);
 
   const playerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (
+      typeof window !== "undefined" &&
+      typeof window.gtag === "function"
+    ) {
+      window.gtag("event", "artist_view", {
+        artist_name: artistName,
+      });
+    }
+  }, [artistName]);
 
   useEffect(() => {
     if (!selectedTrack || !editPlayerLayout) return;
@@ -107,10 +124,10 @@ export default function ArtistTracksClient({
                   <div className="aspect-square bg-black/20">
                     {selectedTrack.coverSignedUrl ? (
                       <img
-  src={selectedTrack.coverSignedUrl}
-  alt={`Cover de ${selectedTrack.title}`}
-  className="h-full w-full object-cover"
-/>
+                        src={selectedTrack.coverSignedUrl}
+                        alt={`Cover de ${selectedTrack.title}`}
+                        className="h-full w-full object-cover"
+                      />
                     ) : (
                       <div className="flex h-full items-center justify-center text-4xl text-white/20">
                         ♪
@@ -138,13 +155,13 @@ export default function ArtistTracksClient({
                   </div>
                 </div>
 
-               <div className="relative h-[320px] overflow-visible">
-  <img
-    src="/images/cavernium-artist-placeholder.png"
-    alt="CAVERNIUM artist"
-    className="absolute left-1/2 top-[-47px] h-[280px] w-[280px] -translate-x-1/2 object-contain opacity-80"
-  />
-</div>
+                <div className="relative h-[320px] overflow-visible">
+                  <img
+                    src="/images/cavernium-artist-placeholder.png"
+                    alt="CAVERNIUM artist"
+                    className="absolute left-1/2 top-[-47px] h-[280px] w-[280px] -translate-x-1/2 object-contain opacity-80"
+                  />
+                </div>
               </div>
             ) : (
               <TrackPlayer
