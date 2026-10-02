@@ -696,6 +696,15 @@ export default function TrackPlayer({
         return;
       }
 
+      window.gtag?.("event", "track_rate", {
+        track_id: trackId,
+        track_title: title,
+        artist_name: artist,
+        genre,
+        score: data.score,
+        is_revaluation: true,
+      });
+
       setExistingRating(data);
       setSelectedScore(data.score);
       setShowRating(false);
@@ -727,6 +736,15 @@ export default function TrackPlayer({
       setSaving(false);
       return;
     }
+
+    window.gtag?.("event", "track_rate", {
+      track_id: trackId,
+      track_title: title,
+      artist_name: artist,
+      genre,
+      score: data.score,
+      is_revaluation: false,
+    });
 
     setExistingRating(data);
     setRatingSaved(true);
