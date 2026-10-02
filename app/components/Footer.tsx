@@ -1,6 +1,36 @@
+"use client";
+
+import { useEffect } from "react";
 import Link from "next/link";
 
+declare global {
+  interface Window {
+    gtag?: (...args: unknown[]) => void;
+  }
+}
+
 export default function Footer() {
+  useEffect(() => {
+    const hasVisitedBefore =
+      window.localStorage.getItem("cavernium_visited_before") === "1";
+
+    const returnVisitSent =
+      window.sessionStorage.getItem("cavernium_return_visit_sent") === "1";
+
+    if (hasVisitedBefore && !returnVisitSent) {
+      window.gtag?.("event", "return_visit");
+      window.sessionStorage.setItem(
+        "cavernium_return_visit_sent",
+        "1"
+      );
+    }
+
+    window.localStorage.setItem(
+      "cavernium_visited_before",
+      "1"
+    );
+  }, []);
+
   return (
     <footer className="mt-16 border-t border-white/10 bg-black/20">
       <div className="mx-auto flex max-w-7xl flex-col gap-4 px-6 py-8 text-center sm:flex-row sm:items-center sm:justify-between sm:text-left">
