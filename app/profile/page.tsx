@@ -446,7 +446,7 @@ export default function ProfilePage() {
                           href="/pro"
                           className="font-sans text-[10px] font-medium uppercase tracking-wider text-[#0286DC] transition hover:text-[#5CCBFF] hover:drop-shadow-[0_0_6px_rgba(2,134,220,0.55)]"
                         >
-                          VER ESTADÍSTICAS
+                          VIEW ANALYTICS
                         </Link>
                       </>
                     ) : (
@@ -454,7 +454,7 @@ export default function ProfilePage() {
                         href="/pro"
                         className="hidden font-sans text-[10px] font-medium uppercase tracking-wider text-[#0286DC] transition hover:text-[#5CCBFF] hover:drop-shadow-[0_0_6px_rgba(2,134,220,0.55)] md:inline-block"
                       >
-                        ASCENDER A PRO
+                        UPGRADE TO PRO
                       </Link>
                     )}
                   </div>
@@ -468,15 +468,15 @@ export default function ProfilePage() {
                       href="/pro"
                       className="mt-2 block font-sans text-[10px] font-medium uppercase tracking-wider text-[#0286DC] transition hover:text-[#5CCBFF] hover:drop-shadow-[0_0_6px_rgba(2,134,220,0.55)] md:hidden"
                     >
-                      ASCENDER A PRO
+                      UPGRADE TO PRO
                     </Link>
                   )}
                   <Link
-  href={`/artists/${artist?.id}/edit`}
-  className="mt-2 block font-sans text-[10px] font-medium uppercase tracking-wider text-[#0286DC] transition hover:text-[#5CCBFF] hover:drop-shadow-[0_0_6px_rgba(2,134,220,0.55)] md:hidden"
->
-  EDIT ARTIST PROFILE
-</Link>
+                    href={`/artists/${artist?.id}/edit`}
+                    className="mt-2 block font-sans text-[10px] font-medium uppercase tracking-wider text-[#0286DC] transition hover:text-[#5CCBFF] hover:drop-shadow-[0_0_6px_rgba(2,134,220,0.55)] md:hidden"
+                  >
+                    EDIT ARTIST PROFILE
+                  </Link>
                 </div>
 
                 <div className="ml-3 h-32 w-32 shrink-0 translate-x-4 overflow-hidden rounded-xl border border-white/10 bg-white/5">
@@ -514,7 +514,7 @@ export default function ProfilePage() {
                     }
                     coverUrl={selectedTrack.coverUrl}
                     hideCover
-                    compact                                        
+                    compact
                     ratingInsidePlayer
                   />
 
