@@ -280,17 +280,17 @@ export default async function Page() {
             />
             <div className="relative z-10 mx-auto max-w-2xl text-center">
               <p className="text-xs font-medium uppercase tracking-[0.32em] text-[#5CCBFF]">
-                PRO ACCESS
+                COMING SOON
               </p>
               <h1 className="mt-4 text-4xl font-semibold tracking-tight text-[#E8F8FF]">
                 CAVERNIUM PRO
               </h1>
               <div className="mx-auto mt-5 h-px w-20 bg-[#0286DC]/50" />
               <p className="mt-5 text-sm leading-6 text-white/55 sm:text-base">
-                Artist analytics are available to PRO artists.
+                CAVERNIUM PRO is coming soon.
               </p>
               <p className="mt-2 text-xs leading-5 text-white/30">
-                Performance, evolution, comparison, audience and saves.
+                Artist analytics, performance, evolution, comparison, audience and saves.
               </p>
             </div>
           </section>
