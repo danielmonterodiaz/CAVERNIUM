@@ -7,6 +7,7 @@ import {
   Manrope,
   Plus_Jakarta_Sans,
 } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import Footer from "./components/Footer";
 
@@ -69,6 +70,19 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} ${spaceGrotesk.variable} ${montserrat.variable} ${manrope.variable} ${plusJakartaSans.variable} h-full antialiased`}
     >
       <body className="min-h-screen">
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-Q0G01B1E2C"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-Q0G01B1E2C');
+          `}
+        </Script>
+
         {children}
         <Footer />
       </body>
