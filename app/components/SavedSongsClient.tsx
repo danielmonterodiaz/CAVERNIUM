@@ -25,7 +25,7 @@ export default function SavedSongsClient({
   if (tracks.length === 0) {
     return (
       <p className="mt-3 text-sm text-white/50">
-        You haven't saved any songs yet.
+        You haven&apos;t saved any songs yet.
       </p>
     );
   }

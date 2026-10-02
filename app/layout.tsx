@@ -41,8 +41,18 @@ const plusJakartaSans = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://cavernium.com"),
   title: "CAVERNIUM — What Deserves to Be Heard",
-  description: "What deserves to be heard.",
+  description:
+    "Discover emerging artists, new music and hidden gems before everyone else.",
+  openGraph: {
+    title: "CAVERNIUM — What Deserves to Be Heard",
+    description:
+      "Discover emerging artists, new music and hidden gems before everyone else.",
+    url: "https://cavernium.com",
+    siteName: "CAVERNIUM",
+    type: "website",
+  },
 };
 
 export const viewport: Viewport = {
@@ -53,28 +63,14 @@ export const viewport: Viewport = {
 export default function RootLayout({
   children,
 }: LayoutProps<"/">) {
-  const isProduction = process.env.NODE_ENV === "production";
-
   return (
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} ${spaceGrotesk.variable} ${montserrat.variable} ${manrope.variable} ${plusJakartaSans.variable} h-full antialiased`}
     >
       <body className="min-h-screen">
-        {isProduction ? (
-          <main className="fixed inset-0 z-[9999] overflow-hidden bg-black">
-            <img
-              src="/coming-soon.png"
-              alt="CAVERNIUM — Coming Soon"
-              className="h-full w-full object-cover object-center"
-            />
-          </main>
-        ) : (
-          <>
-            {children}
-            <Footer />
-          </>
-        )}
+        {children}
+        <Footer />
       </body>
     </html>
   );

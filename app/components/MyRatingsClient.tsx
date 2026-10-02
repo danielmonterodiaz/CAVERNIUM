@@ -1,4 +1,3 @@
-
 "use client";
 
 type RatingTrack = {
@@ -28,7 +27,7 @@ export default function MyRatingsClient({
   if (ratings.length === 0) {
     return (
       <p className="mt-3 text-sm text-white/50">
-        You haven't rated any songs yet.
+        You haven&apos;t rated any songs yet.
       </p>
     );
   }
@@ -67,8 +66,8 @@ export default function MyRatingsClient({
               <button
                 type="button"
                 onClick={() => {
-  onSelectTrack(rating);
-}}
+                  onSelectTrack(rating);
+                }}
                 className="shrink-0 rounded-lg border border-[#0286DC] px-2.5 py-2 text-xs font-semibold text-[#5CCBFF] transition hover:bg-[#0286DC]/15 sm:px-3 sm:text-sm"
               >
                 {selectedTrackId === rating.track_id

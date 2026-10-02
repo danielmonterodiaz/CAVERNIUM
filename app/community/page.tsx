@@ -1,4 +1,5 @@
-import Link from "next/link";
+"use client";
+
 
 const content = `CAVERNIUM — COMMUNITY & CONTENT POLICY
 Version 1.0
@@ -36,13 +37,21 @@ Users must not use CAVERNIUM to upload, publish, distribute, transmit, or otherw
 • is used to facilitate unlawful activity; or
 • circumvents or attempts to circumvent a restriction, suspension, termination, or other enforcement action imposed by CAVERNIUM.
 
-4. Artist Identity and Metadata
+4. Artist Identity, Metadata and CAVERNIUM Brand Assets
 
 Artist names, profiles, biographies, credits, artwork, descriptions, and other metadata must not intentionally mislead users regarding identity, authorship, affiliation, or origin.
 
 Users operating artist accounts represent that they are the artist, an authorized representative, or otherwise authorized to operate the relevant artist account.
 
-CAVERNIUM may temporarily restrict or review an artist profile or associated Content where a legitimate identity or authorization dispute requires investigation, subject to applicable law.
+Users may use the CAVERNIUM name, logo, or other designated CAVERNIUM brand assets in connection with their participation on the platform where such use is intended to identify their presence on CAVERNIUM and does not falsely imply that CAVERNIUM produced, endorsed, certified, sponsored, selected, or officially approved the relevant Content.
+
+CAVERNIUM may provide specific badges, seals, labels, or other visual identifiers, including a designated CAVERNIUM Artist mark. Such identifiers may be used only by artists who are authorized to use them and only in accordance with any instructions or conditions established by CAVERNIUM.
+
+Users must not modify, distort, combine, or use CAVERNIUM brand assets in a manner that is misleading, confusing, defamatory, unlawful, or likely to create a false impression of affiliation, sponsorship, certification, or official approval.
+
+CAVERNIUM may require a user to modify or remove any use of its name, logo, badge, seal, or other brand asset that does not comply with these requirements.
+
+CAVERNIUM may temporarily restrict or review an artist profile or associated Content where a legitimate identity, authorization, brand-use, or affiliation dispute requires investigation, subject to applicable law.
 
 5. Duplicate or Misleading Audio Uploads
 
@@ -193,13 +202,19 @@ export default function Page() {
   return (
     <main className="min-h-screen bg-black px-6 py-16 text-white">
       <div className="mx-auto max-w-4xl">
-        <Link
-          href="/"
-          className="font-sans text-xs font-medium uppercase tracking-wider text-[#0286DC] transition hover:text-[#5CCBFF] hover:drop-shadow-[0_0_6px_rgba(2,134,220,0.55)]"
-        >
-          Back to CAVERNIUM
-        </Link>
-
+        <button
+  type="button"
+  onClick={() => {
+    if (window.history.length > 1) {
+      window.history.back();
+    } else {
+      window.location.href = "/";
+    }
+  }}
+  className="font-sans text-xs font-medium uppercase tracking-wider text-[#0286DC] transition hover:text-[#5CCBFF] hover:drop-shadow-[0_0_6px_rgba(2,134,220,0.55)]"
+>
+  ← Back
+</button>
         <article className="mt-10 rounded-2xl border border-white/10 bg-white/[0.025] p-6 sm:p-10">
           <div className="font-sans text-sm leading-7 text-white/70">
             {content.split("\n\n").map((paragraph, index) => (

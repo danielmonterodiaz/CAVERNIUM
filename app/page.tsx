@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import HomeClient from "@/app/components/HomeClient";
 import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
@@ -5,23 +6,40 @@ import LogoutButton from "@/app/components/LogoutButton";
 import UploadGateButton from "@/app/components/UploadGateButton";
 import MobileNav from "@/app/components/MobileNav";
 
+export const metadata: Metadata = {
+  title: "CAVERNIUM — AI Music Discovery",
+  description:
+    "Discover music created or transformed with AI. Explore emerging artists, new releases and hidden gems on CAVERNIUM.",
+  alternates: {
+    canonical: "https://cavernium.com",
+  },
+  openGraph: {
+    title: "CAVERNIUM — AI Music Discovery",
+    description:
+      "Discover music created or transformed with AI. Explore emerging artists, new releases and hidden gems on CAVERNIUM.",
+    url: "https://cavernium.com",
+    siteName: "CAVERNIUM",
+    type: "website",
+  },
+};
+
 export default async function Home() {
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  
+
   let loggedArtistName: string | null = null;
 
-if (user) {
-  const { data: loggedArtist } = await supabase
-    .from("artists")
-    .select("artist_name")
-    .eq("id", user.id)
-    .maybeSingle();
+  if (user) {
+    const { data: loggedArtist } = await supabase
+      .from("artists")
+      .select("artist_name")
+      .eq("id", user.id)
+      .maybeSingle();
 
-  loggedArtistName = loggedArtist?.artist_name ?? null;
-}
+    loggedArtistName = loggedArtist?.artist_name ?? null;
+  }
 
   const { data: tracks, error: tracksError } = await supabase
     .from("tracks")
@@ -47,7 +65,6 @@ if (user) {
       </main>
     );
   }
-
 
   const coverPaths = [
     ...new Set(
@@ -158,10 +175,10 @@ if (user) {
 
     if (recentCount <= 0) continue;
 
-if (
-  previousCount > 0 &&
-  recentRate <= previousRate
-) continue;
+    if (
+      previousCount > 0 &&
+      recentRate <= previousRate
+    ) continue;
 
     const recentRateShare =
       recentRate /
@@ -212,7 +229,6 @@ if (
     })
     .slice(0, 4);
 
-
   const deservesScoreByTrack =
     new Map<string, number>();
 
@@ -243,7 +259,7 @@ if (
         1,
         Math.sqrt(
           (listenCountByTrack.get(track.id) ?? 0) /
-            10
+          10
         )
       );
 
@@ -252,7 +268,7 @@ if (
         1,
         Math.sqrt(
           (ratingCountByTrack.get(track.id) ?? 0) /
-            5
+          5
         )
       );
 
@@ -409,16 +425,14 @@ if (
         (1000 * 60 * 60 * 24);
 
       return (
-  ageDays <= 30 &&
-  track.coverSignedUrl &&
-  !featuredTrackIds.has(track.id) &&
-  !risingTrackIds.has(track.id) &&
-  !hiddenGemTracks.some((item) => item.id === track.id)
-);
+        ageDays <= 30 &&
+        track.coverSignedUrl &&
+        !featuredTrackIds.has(track.id) &&
+        !risingTrackIds.has(track.id) &&
+        !hiddenGemTracks.some((item) => item.id === track.id)
+      );
     })
-    .slice(0, 5);
-
-
+    .slice(0, 16);
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-black text-white">
@@ -434,148 +448,145 @@ if (
       </div>
 
       <div className="relative z-10 mx-auto max-w-7xl px-6 py-0">
-        
-        
-          <div className="relative z-50 bg-gradient-to-b from-black/70 via-black/25 to-transparent">
+        <div className="relative z-50 bg-gradient-to-b from-black/70 via-black/25 to-transparent">
           <header className="relative mb-4 flex items-center border-b border-white/5 bg-transparent pb-0 backdrop-blur-[2px]">
-          <div className="flex shrink-0 items-start">
-            <img
-              src="/icons/LOGO%20CAVERNIUM.png"
-              alt="CAVERNIUM"
-              className="w-36 h-auto md:w-56"
+            <div className="flex shrink-0 items-start">
+              <img
+                src="/icons/LOGO%20CAVERNIUM.png"
+                alt="CAVERNIUM"
+                className="w-36 h-auto md:w-56"
+              />
+              <div className="mx-0 h-12 w-px bg-white/20" />
+            </div>
+
+            <div className="flex min-w-0 lg:-translate-x-12 flex-col">
+              <nav className="hidden items-center gap-7 whitespace-nowrap text-sm text-white/60 md:flex">
+                <span className="text-white">
+                  Home
+                </span>
+
+                <Link
+                  href="/discover"
+                  className="transition hover:text-white"
+                >
+                  Discover
+                </Link>
+
+                <Link
+                  href="/rankings"
+                  className="transition hover:text-white"
+                >
+                  Rankings
+                </Link>
+
+                <Link
+                  href="/artists"
+                  className="transition hover:text-white"
+                >
+                  Artists
+                </Link>
+
+                <UploadGateButton isLoggedIn={!!user} />
+
+                {user ? (
+                  <>
+                    <span className="-ml-6 translate-x-2 rounded-lg border border-white/10 bg-white/[0.025] px-3 py-1.5 text-xs text-white/50 backdrop-blur-sm">
+                      LOGGED AS {loggedArtistName ?? "USER"}
+                    </span>
+
+                    <div className="-mr-4 flex items-center gap-6">
+                      <Link href="/profile" className="hover:text-white">
+                        My Profile
+                      </Link>
+
+                      <LogoutButton />
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <Link href="/login" className="hover:text-white">
+                      Log in
+                    </Link>
+
+                    <Link href="/signup" className="hover:text-white">
+                      Sign up
+                    </Link>
+                  </>
+                )}
+              </nav>
+
+              <p className="mt-2 text-xs tracking-widest text-white/40">
+                LISTEN · RATE · DISCOVER
+              </p>
+            </div>
+
+            <MobileNav
+              isLoggedIn={!!user}
+              loggedArtistName={loggedArtistName}
             />
-            <div className="mx-0 h-12 w-px bg-white/20" />
-          </div>
 
-          <div className="flex min-w-0 lg:-translate-x-12 flex-col">
-            <nav className="hidden items-center gap-7 whitespace-nowrap text-sm text-white/60 md:flex">
+            <div
+              id="player-slot"
+              className="absolute left-0 top-full z-0 w-full lg:left-auto lg:right-0 lg:top-0 lg:w-[380px] lg:translate-x-14"
+            />
+          </header>
 
-            <span className="text-white">
-              Home
-            </span>
+          <div className="h-[320px] md:hidden" />
 
-            <Link
-              href="/discover"
-              className="transition hover:text-white"
-            >
-              Discover
-            </Link>
+          <style>{`
+            @keyframes caverniumSectionGlow {
+              0%, 76%, 100% {
+                text-shadow: 0 0 0 rgba(92, 203, 255, 0);
+              }
 
-            <Link
-              href="/rankings"
-              className="transition hover:text-white"
-            >
-              Rankings
-            </Link>
-
-            <Link
-              href="/artists"
-              className="transition hover:text-white"
-            >
-              Artists
-              </Link>
-            <UploadGateButton isLoggedIn={!!user} />
-
-            {user ? (
-  <>
-     <span className="-ml-6 translate-x-2 rounded-lg border border-white/10 bg-white/[0.025] px-3 py-1.5 text-xs text-white/50 backdrop-blur-sm">
-  LOGGED AS {loggedArtistName ?? "USER"}
-</span>
-<div className="-mr-4 flex items-center gap-6">
-    <Link href="/profile" className="hover:text-white">
-      My Profile
-    </Link>
-
-    <LogoutButton />
-    </div>
-  </>
-            ) : (
-              <>
-                <Link href="/login" className="hover:text-white">
-                  Log in
-                </Link>
-
-                <Link href="/signup" className="hover:text-white">
-                  Sign up
-                </Link>
-              </>
-            )}
-
-            </nav>
-
-            <p className="mt-2 text-xs tracking-widest text-white/40">
-              LISTEN · RATE · DISCOVER
-            </p>
-          </div>
-
-          <MobileNav
-            isLoggedIn={!!user}
-            loggedArtistName={loggedArtistName}
-          />
-
-          <div
-            id="player-slot"
-            className="absolute left-0 top-full z-0 w-full lg:left-auto lg:right-0 lg:top-0 lg:w-[380px] lg:translate-x-14"
-          />
-
-        </header>
-
-        <div className="h-[320px] md:hidden" />
-
-        <style>{`
-          @keyframes caverniumSectionGlow {
-            0%, 76%, 100% {
-              text-shadow: 0 0 0 rgba(92, 203, 255, 0);
+              84%, 92% {
+                text-shadow:
+                  0 0 5px rgba(92, 203, 255, 0.65),
+                  0 0 12px rgba(92, 203, 255, 0.35);
+              }
             }
-            84%, 92% {
-              text-shadow:
-                0 0 5px rgba(92, 203, 255, 0.65),
-                0 0 12px rgba(92, 203, 255, 0.35);
+
+            .cavernium-section-glow {
+              animation: caverniumSectionGlow 4.8s ease-in-out infinite;
             }
-          }
+          `}</style>
 
-          .cavernium-section-glow {
-            animation: caverniumSectionGlow 4.8s ease-in-out infinite;
-          }
-        `}</style>
+          <div className="mb-10 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 pb-5 text-sm tracking-[0.18em] text-white/40 lg:-translate-x-20">
+            <span className="text-white/70">EXPLORE</span>
 
-        <div className="mb-10 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 pb-5 text-sm tracking-[0.18em] text-white/40 lg:-translate-x-20">
-          <span className="text-white/70">EXPLORE</span>
+            <a
+              href="#what-deserves"
+              className="cavernium-section-glow transition hover:text-white"
+              style={{ animationDelay: "0s" }}
+            >
+              WHAT DESERVES TO BE HEARD
+            </a>
 
-          <a
-            href="#what-deserves"
-            className="cavernium-section-glow transition hover:text-white"
-            style={{ animationDelay: "0s" }}
-          >
-            WHAT DESERVES TO BE HEARD
-          </a>
+            <a
+              href="#rising"
+              className="cavernium-section-glow transition hover:text-white"
+              style={{ animationDelay: "1.2s" }}
+            >
+              RISING
+            </a>
 
-          <a
-            href="#rising"
-            className="cavernium-section-glow transition hover:text-white"
-            style={{ animationDelay: "1.2s" }}
-          >
-            RISING
-          </a>
+            <a
+              href="#hidden-gems"
+              className="cavernium-section-glow transition hover:text-white"
+              style={{ animationDelay: "2.4s" }}
+            >
+              HIDDEN GEMS
+            </a>
 
-          <a
-            href="#hidden-gems"
-            className="cavernium-section-glow transition hover:text-white"
-            style={{ animationDelay: "2.4s" }}
-          >
-            HIDDEN GEMS
-          </a>
-
-          <a
-            href="#new"
-            className="cavernium-section-glow transition hover:text-white"
-            style={{ animationDelay: "3.6s" }}
-          >
-            NEW
-          </a>
+            <a
+              href="#new"
+              className="cavernium-section-glow transition hover:text-white"
+              style={{ animationDelay: "3.6s" }}
+            >
+              NEW
+            </a>
+          </div>
         </div>
-
-          </div>
 
         <HomeClient
           tracks={tracksWithCovers}
@@ -584,7 +595,6 @@ if (
           newTracks={newTracks}
           hiddenGemTracks={hiddenGemTracks}
         />
-
       </div>
     </main>
   );

@@ -3,6 +3,24 @@ import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
 import MobileNav from "@/app/components/MobileNav";
 import LogoutButton from "@/app/components/LogoutButton";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Discover AI Music — CAVERNIUM",
+  description:
+    "Discover music created or transformed with AI. Listen to emerging artists and explore new sounds on CAVERNIUM.",
+  alternates: {
+    canonical: "https://cavernium.com/discover",
+  },
+  openGraph: {
+    title: "Discover AI Music — CAVERNIUM",
+    description:
+      "Discover music created or transformed with AI. Listen to emerging artists and explore new sounds on CAVERNIUM.",
+    url: "https://cavernium.com/discover",
+    siteName: "CAVERNIUM",
+    type: "website",
+  },
+};
 
 export default async function Home() {
   const supabase = await createClient();
@@ -175,9 +193,15 @@ export default async function Home() {
           </div>
           </header>
 
-          {tracksWithCovers.length > 0 && (
-            <DiscoverPageClient tracks={tracksWithCovers} />
-          )}
+          <>
+  <p className="mb-6 text-sm text-white/50">
+    Discover music created or transformed with AI by emerging artists.
+  </p>
+
+  {tracksWithCovers.length > 0 && (
+    <DiscoverPageClient tracks={tracksWithCovers} />
+  )}
+</>
         </div>
       </div>
     </main>

@@ -249,10 +249,33 @@ export default function UploadTrack() {
 
       const coverPath = `artists/${user.id}/${crypto.randomUUID()}-${coverFile.name}`;
 
-      const { error: coverError } =
-        await supabase.storage
+      let coverError: {
+        message: string;
+        statusCode?: string | number;
+      } | null = null;
+
+      for (let attempt = 1; attempt <= 3; attempt++) {
+        const { error } = await supabase.storage
           .from("covers")
           .upload(coverPath, coverFile);
+
+        coverError = error;
+
+        if (!error) {
+          break;
+        }
+
+        const statusCode = Number(error.statusCode);
+
+        if (attempt < 3 && statusCode >= 500) {
+          await new Promise((resolve) =>
+            setTimeout(resolve, attempt * 700)
+          );
+          continue;
+        }
+
+        break;
+      }
 
       if (coverError) {
         await cleanupUploadedFiles();
@@ -541,6 +564,7 @@ export default function UploadTrack() {
 
               <option value="Pop">Pop</option>
               <option value="Rock">Rock</option>
+              <option value="Ballad">Ballad</option>
               <option value="Alternative">
                 Alternative
               </option>

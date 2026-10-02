@@ -96,7 +96,7 @@ export default function SignUp() {
   }
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-black px-6 py-12 text-white">
+    <main className="relative min-h-screen overflow-hidden bg-black px-6 py-4 text-white">
       <img
         src="/icons/LOGO%20CAVERNIUM.png"
         alt=""

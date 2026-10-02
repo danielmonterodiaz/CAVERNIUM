@@ -2,6 +2,24 @@ import Link from "next/link";
 import RankingsClient from "@/app/components/RankingsClient";
 import { createClient } from "@/lib/supabase/server";
 import MobileNav from "@/app/components/MobileNav";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "AI Music Rankings — CAVERNIUM",
+  description:
+    "Explore the highest rated music created or transformed with AI on CAVERNIUM.",
+  alternates: {
+    canonical: "https://cavernium.com/rankings",
+  },
+  openGraph: {
+    title: "AI Music Rankings — CAVERNIUM",
+    description:
+      "Explore the highest rated music created or transformed with AI on CAVERNIUM.",
+    url: "https://cavernium.com/rankings",
+    siteName: "CAVERNIUM",
+    type: "website",
+  },
+};
 
 export default async function Rankings() {
   const supabase = await createClient();
@@ -243,13 +261,13 @@ export default async function Rankings() {
           />
 
           <div className="relative z-10 text-center">
-            <h2 className="text-2xl font-bold uppercase tracking-tight text-white">
-              Rankings
-            </h2>
+            <h1 className="text-2xl font-bold uppercase tracking-tight text-white">
+  Rankings
+</h1>
 
             <p className="mt-2 text-sm text-white/50">
-              The highest rated tracks on CAVERNIUM.
-            </p>
+  The highest rated music created or transformed with AI on CAVERNIUM.
+</p>
           </div>
 
           <div className="mt-6">

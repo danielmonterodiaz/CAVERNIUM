@@ -87,7 +87,7 @@ export default function ArtistTracksClient({
   return (
     <div className="mt-8">
       {selectedTrack && (
-        <div ref={playerRef} className="mb-8 scroll-mt-32">
+        <div ref={playerRef} className="mb-8 scroll-mt-70">
           {selectedTrack.audioSignedUrl ? (
             editPlayerLayout ? (
               <div className="grid max-w-[1120px] gap-5 md:grid-cols-[minmax(0,1fr)_220px_450px] md:items-start">

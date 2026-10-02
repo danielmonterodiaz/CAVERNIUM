@@ -36,6 +36,20 @@ export default function Footer() {
           >
             Community
           </Link>
+
+          <a
+            href="https://mail.google.com/mail/?view=cm&fs=1&to=report@cavernium.com"
+            className="font-sans text-xs font-medium uppercase tracking-wider text-[#0286DC] transition hover:text-[#5CCBFF] hover:drop-shadow-[0_0_6px_rgba(2,134,220,0.55)]"
+          >
+            Report a Problem
+          </a>
+
+          <a
+            href="https://mail.google.com/mail/?view=cm&fs=1&to=business@cavernium.com"
+            className="font-sans text-xs font-medium uppercase tracking-wider text-[#0286DC] transition hover:text-[#5CCBFF] hover:drop-shadow-[0_0_6px_rgba(2,134,220,0.55)]"
+          >
+            Business
+          </a>
         </nav>
       </div>
     </footer>

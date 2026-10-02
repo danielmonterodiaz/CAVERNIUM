@@ -1,15 +1,22 @@
-import Link from "next/link";
+"use client";
 
 export default function PrivacyPage() {
   return (
     <main className="min-h-screen bg-black px-6 py-16 text-white">
       <div className="mx-auto max-w-4xl">
-        <Link
-          href="/"
-          className="font-sans text-xs font-medium uppercase tracking-wider text-[#0286DC] transition hover:text-[#5CCBFF] hover:drop-shadow-[0_0_6px_rgba(2,134,220,0.55)]"
-        >
-          Back to CAVERNIUM
-        </Link>
+       <button
+  type="button"
+  onClick={() => {
+    if (window.history.length > 1) {
+      window.history.back();
+    } else {
+      window.location.href = "/";
+    }
+  }}
+  className="font-sans text-xs font-medium uppercase tracking-wider text-[#0286DC] transition hover:text-[#5CCBFF] hover:drop-shadow-[0_0_6px_rgba(2,134,220,0.55)]"
+>
+  ← Back
+</button>
 
         <article className="mt-10 rounded-2xl border border-white/10 bg-white/[0.025] p-6 sm:p-10">
           <div className="font-sans text-sm leading-7 text-white/70">

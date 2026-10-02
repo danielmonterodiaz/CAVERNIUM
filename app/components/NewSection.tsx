@@ -32,8 +32,8 @@ export default function NewSection({
         New
       </h2>
 
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 lg:grid-cols-7">
-        {tracks.slice(0, 7).map((item) => (
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 lg:grid-cols-8">
+        {tracks.slice(0, 16).map((item) => (
           <TrackCard
             key={item.id}
             title={item.title}

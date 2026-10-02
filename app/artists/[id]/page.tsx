@@ -1,12 +1,61 @@
+import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
 import ArtistTracksClient from "../../components/ArtistTracksClient";
+import { notFound } from "next/navigation";
+
 
 type ArtistPageProps = {
   params: Promise<{
     id: string;
   }>;
 };
+
+export async function generateMetadata({
+  params,
+}: ArtistPageProps): Promise<Metadata> {
+  const { id } = await params;
+  if (
+  !/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$/.test(
+    id
+  )
+) {
+  notFound();
+}
+  const supabase = await createClient();
+
+  const { data: artist } = await supabase
+    .from("artists")
+    .select("artist_name, bio")
+    .eq("id", id)
+    .single();
+
+  if (!artist) {
+    return {
+      title: "Artist — CAVERNIUM",
+      description: "Discover independent artists and music on CAVERNIUM.",
+    };
+  }
+
+  const description =
+    artist.bio?.trim() ||
+    `Discover ${artist.artist_name} and their music on CAVERNIUM.`;
+
+  return {
+    title: `${artist.artist_name} — CAVERNIUM`,
+    description,
+    alternates: {
+      canonical: `https://cavernium.com/artists/${id}`,
+    },
+    openGraph: {
+      title: `${artist.artist_name} — CAVERNIUM`,
+      description,
+      url: `https://cavernium.com/artists/${id}`,
+      siteName: "CAVERNIUM",
+      type: "profile",
+    },
+  };
+}
 
 export default async function ArtistPage({
   params,
@@ -184,8 +233,8 @@ export default async function ArtistPage({
 
             {user && (
               <span className="ml-1 rounded-lg border border-white/10 bg-white/[0.025] px-3 py-1.5 text-xs text-white/50 backdrop-blur-sm">
-  LOGGED AS {loggedArtistName ?? "USER"}
-</span>
+                LOGGED AS {loggedArtistName ?? "USER"}
+              </span>
             )}
           </nav>
         </header>
@@ -254,7 +303,6 @@ export default async function ArtistPage({
                     <p className="whitespace-pre-wrap break-words text-sm leading-relaxed text-white/60">
                       {artist.bio}
                     </p>
-
                   </div>
                 )}
               </div>

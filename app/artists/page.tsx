@@ -1,6 +1,24 @@
 import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
 import MobileNav from "@/app/components/MobileNav";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "AI Artists — CAVERNIUM",
+  description:
+    "Discover independent artists creating or transforming music with AI on CAVERNIUM.",
+  alternates: {
+    canonical: "https://cavernium.com/artists",
+  },
+  openGraph: {
+    title: "AI Artists — CAVERNIUM",
+    description:
+      "Discover independent artists creating or transforming music with AI on CAVERNIUM.",
+    url: "https://cavernium.com/artists",
+    siteName: "CAVERNIUM",
+    type: "website",
+  },
+};
 
 export default async function Artists() {
   const supabase = await createClient();
@@ -245,8 +263,8 @@ export default async function Artists() {
           </div>
 
           <p className="mt-2 text-sm text-white/50">
-            Artists with music on CAVERNIUM.
-          </p>
+  Artists creating or transforming music with AI on CAVERNIUM.
+</p>
 
           {artistsWithCovers.length === 0 ? (
             <p className="mt-10 text-white/50">

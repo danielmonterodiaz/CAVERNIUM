@@ -1,6 +1,24 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { createClient } from "@/lib/supabase/server";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "CAVERNIUM Pro — AI Music Artist Tools",
+  description:
+    "Explore CAVERNIUM Pro and the tools designed for artists creating or transforming music with AI.",
+  alternates: {
+    canonical: "https://cavernium.com/pro",
+  },
+  openGraph: {
+    title: "CAVERNIUM Pro — AI Music Artist Tools",
+    description:
+      "Explore CAVERNIUM Pro and the tools designed for artists creating or transforming music with AI.",
+    url: "https://cavernium.com/pro",
+    siteName: "CAVERNIUM",
+    type: "website",
+  },
+};
 
 type TrackStats = {
   track_id: string;

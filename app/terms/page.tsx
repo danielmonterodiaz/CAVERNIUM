@@ -1,3 +1,4 @@
+"use client";
 export default function TermsPage() {
   const sections = [
     "CAVERNIUM — GLOBAL TERMS & CONDITIONS",
@@ -91,12 +92,19 @@ export default function TermsPage() {
     <main className="min-h-screen bg-black text-white">
       <div className="mx-auto max-w-4xl px-6 py-12">
         <div className="mb-10">
-          <a
-            href="/"
-            className="font-sans text-xs font-medium uppercase tracking-wider text-[#0286DC] transition hover:text-[#5CCBFF] hover:drop-shadow-[0_0_6px_rgba(2,134,220,0.55)]"
-          >
-            ← Back to Home
-          </a>
+          <button
+  type="button"
+  onClick={() => {
+    if (window.history.length > 1) {
+      window.history.back();
+    } else {
+      window.location.href = "/";
+    }
+  }}
+  className="font-sans text-xs font-medium uppercase tracking-wider text-[#0286DC] transition hover:text-[#5CCBFF] hover:drop-shadow-[0_0_6px_rgba(2,134,220,0.55)]"
+>
+  ← Back
+</button>
 
           <h1 className="mt-8 text-3xl font-semibold tracking-tight text-[#E8F8FF]">
             CAVERNIUM — Global Terms & Conditions

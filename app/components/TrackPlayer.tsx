@@ -310,6 +310,78 @@ export default function TrackPlayer({
     ? newListeningPercent >= 10
     : listenedPercent >= 30;
 
+  async function registerListenIfNeeded(
+    time: number
+  ) {
+    if (listenCreatedRef.current) return;
+
+    const threshold = Math.min(
+      10,
+      durationSeconds * 0.1
+    );
+
+    if (time < threshold) return;
+
+    listenCreatedRef.current = true;
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      listenCreatedRef.current = false;
+      return;
+    }
+
+    const percent = Math.min(
+      100,
+      Math.round(
+        (time / durationSeconds) * 100
+      )
+    );
+
+    const { data: currentVersion } = await supabase
+      .from("track_versions")
+      .select("id")
+      .eq("track_id", trackId)
+      .eq("is_current", true)
+      .order("version_number", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    const { data, error } =
+      await supabase
+        .from("listens")
+        .insert({
+          track_id: trackId,
+          track_version_id: currentVersion?.id ?? null,
+          user_id: user.id,
+          started_at:
+            sessionStartedAtRef.current ??
+            new Date().toISOString(),
+          listened_seconds:
+            Math.floor(time),
+          listened_percent: percent,
+          completed: false,
+        })
+        .select("id")
+        .single();
+
+    if (error) {
+      console.error(
+        "Error registering listen:",
+        error
+      );
+
+      listenCreatedRef.current = false;
+      return;
+    }
+
+    listenIdRef.current = data.id;
+    listenCreatedRef.current = true;
+  }
+
+
   /*
    * Eventos del reproductor.
    *
@@ -442,77 +514,6 @@ export default function TrackPlayer({
       );
     };
   }, [trackId, durationSeconds]);
-
-  async function registerListenIfNeeded(
-    time: number
-  ) {
-    if (listenCreatedRef.current) return;
-
-    const threshold = Math.min(
-      10,
-      durationSeconds * 0.1
-    );
-
-    if (time < threshold) return;
-
-    listenCreatedRef.current = true;
-
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    if (!user) {
-      listenCreatedRef.current = false;
-      return;
-    }
-
-    const percent = Math.min(
-      100,
-      Math.round(
-        (time / durationSeconds) * 100
-      )
-    );
-
-    const { data: currentVersion } = await supabase
-      .from("track_versions")
-      .select("id")
-      .eq("track_id", trackId)
-      .eq("is_current", true)
-      .order("version_number", { ascending: false })
-      .limit(1)
-      .maybeSingle();
-
-    const { data, error } =
-      await supabase
-        .from("listens")
-        .insert({
-          track_id: trackId,
-          track_version_id: currentVersion?.id ?? null,
-          user_id: user.id,
-          started_at:
-            sessionStartedAtRef.current ??
-            new Date().toISOString(),
-          listened_seconds:
-            Math.floor(time),
-          listened_percent: percent,
-          completed: false,
-        })
-        .select("id")
-        .single();
-
-    if (error) {
-      console.error(
-        "Error registering listen:",
-        error
-      );
-
-      listenCreatedRef.current = false;
-      return;
-    }
-
-    listenIdRef.current = data.id;
-    listenCreatedRef.current = true;
-  }
 
   async function togglePlay() {
     const audio = audioRef.current;
@@ -1066,7 +1067,7 @@ export default function TrackPlayer({
                   onClick={() =>
                     setShowRating(true)
                   }
-                  className="mt-4 w-full rounded-lg bg-white px-4 py-2.5 text-sm font-semibold text-black transition hover:bg-white/90"
+                  className="mt-4 w-full rounded-xl border border-[#5CCBFF]/70 bg-[#071016]/80 px-4 py-3 text-sm font-semibold uppercase tracking-wider text-[#5CCBFF] shadow-[0_0_18px_rgba(2,134,220,0.20),inset_0_0_18px_rgba(92,203,255,0.05)] transition hover:border-[#5CCBFF] hover:bg-[#0286DC]/15 hover:text-white hover:shadow-[0_0_30px_rgba(92,203,255,0.38)]"
                 >
                   ★ Rate track
                 </button>
