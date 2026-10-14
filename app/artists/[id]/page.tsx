@@ -65,7 +65,7 @@ export default async function ArtistPage({
 
   const { data: artist, error: artistError } = await supabase
     .from("artists")
-    .select("id, artist_name, cover_url, bio")
+    .select("id, artist_name, cover_url, bio, pioneer_number")
     .eq("id", id)
     .single();
 
@@ -289,12 +289,23 @@ export default async function ArtistPage({
                     </h1>
 
                     <p className="mt-2 text-sm text-white/50">
-                      {tracksWithCovers.length}{" "}
-                      {tracksWithCovers.length === 1
-                        ? "track"
-                        : "tracks"}{" "}
-                      on CAVERNIUM.
-                    </p>
+  {tracksWithCovers.length}{" "}
+  {tracksWithCovers.length === 1
+    ? "track"
+    : "tracks"}{" "}
+  on CAVERNIUM.
+</p>
+
+{artist.pioneer_number != null && (
+  <div className="mt-2 flex flex-row items-center gap-2 whitespace-nowrap">
+    <p className="shrink-0 text-xs font-medium tracking-wide text-[#5CCBFF]">
+      Pioneer Artist · #{artist.pioneer_number}
+    </p>
+    <p className="text-xs italic text-[#5CCBFF]">
+  — Recognized for believing in CAVERNIUM from the beginning.
+</p>
+  </div>
+)}
                   </div>
                 </div>
 

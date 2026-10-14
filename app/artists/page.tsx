@@ -1,3 +1,4 @@
+
 import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
 import MobileNav from "@/app/components/MobileNav";
@@ -76,7 +77,9 @@ export default async function Artists() {
     artistIds.length > 0
       ? await supabase
           .from("artists")
-          .select("id, artist_name, cover_url")
+          .select(
+            "id, artist_name, cover_url, is_founding_artist, pioneer_number"
+          )
           .in("id", artistIds)
       : { data: [], error: null };
 
@@ -108,6 +111,8 @@ export default async function Artists() {
       name: string;
       trackCount: number;
       coverUrl: string | null;
+      isPioneer: boolean;
+      pioneerNumber: number | null;
     }
   >();
 
@@ -126,6 +131,8 @@ export default async function Artists() {
         name: artistName,
         trackCount: 1,
         coverUrl: artist?.cover_url ?? null,
+        isPioneer: artist?.is_founding_artist === true,
+        pioneerNumber: artist?.pioneer_number ?? null,
       });
     }
   }
@@ -191,21 +198,18 @@ export default async function Artists() {
               <Link href="/" className="transition hover:text-white">
                 Home
               </Link>
-
               <Link
                 href="/discover"
                 className="transition hover:text-white"
               >
                 Discover
               </Link>
-
               <Link
                 href="/rankings"
                 className="transition hover:text-white"
               >
                 Rankings
               </Link>
-
               <Link
                 href="/artists"
                 className="text-white transition hover:text-white"
@@ -221,7 +225,6 @@ export default async function Artists() {
                   >
                     My Profile
                   </Link>
-
                   <span className="rounded-lg border border-white/10 bg-white/[0.025] px-3 py-1.5 text-xs text-white/50 backdrop-blur-sm">
                     LOGGED AS {loggedArtistName ?? "USER"}
                   </span>
@@ -263,8 +266,8 @@ export default async function Artists() {
           </div>
 
           <p className="mt-2 text-sm text-white/50">
-  Artists creating or transforming music with AI on CAVERNIUM.
-</p>
+            Artists creating or transforming music with AI on CAVERNIUM.
+          </p>
 
           {artistsWithCovers.length === 0 ? (
             <p className="mt-10 text-white/50">
@@ -276,7 +279,11 @@ export default async function Artists() {
                 <Link
                   key={artist.id}
                   href={`/artists/${artist.id}`}
-                  className="overflow-hidden rounded-2xl border border-white/10 bg-white/5 transition duration-300 hover:scale-[1.02] hover:border-white/30"
+                  className={`overflow-hidden rounded-2xl bg-white/5 transition duration-300 hover:scale-[1.02] ${
+                    artist.isPioneer
+                      ? "border border-white/10 shadow-[0_0_2px_rgba(0,220,255,0.95),0_0_5px_rgba(0,220,255,0.85),0_0_10px_rgba(0,200,255,0.55),0_0_16px_rgba(0,180,255,0.25)] hover:border-white/30"
+                      : "border border-white/10 hover:border-white/30 hover:shadow-[0_0_2px_rgba(0,220,255,0.95),0_0_5px_rgba(0,220,255,0.85),0_0_10px_rgba(0,200,255,0.55),0_0_16px_rgba(0,180,255,0.25)]"
+                  }`}
                 >
                   <div className="aspect-square bg-white/10">
                     {artist.coverSignedUrl ? (
@@ -296,12 +303,9 @@ export default async function Artists() {
                     <h3 className="truncate font-semibold">
                       {artist.name}
                     </h3>
-
                     <p className="mt-1 text-xs text-white/40">
                       {artist.trackCount}{" "}
-                      {artist.trackCount === 1
-                        ? "track"
-                        : "tracks"}
+                      {artist.trackCount === 1 ? "track" : "tracks"}
                     </p>
                   </div>
                 </Link>
